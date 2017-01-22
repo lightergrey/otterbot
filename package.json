@@ -1,0 +1,26 @@
+{
+  "name": "otterbot",
+  "version": "1.0.0",
+  "description": "A bot that is an otter",
+  "main": "index.js",
+  "repository": "https://github.com/lightergrey/otterbot",
+  "dependencies": {
+    "botkit": "^0.4.9",
+    "botkit-storage-redis": "^1.1.0",
+    "fuzzy": "^0.1.3",
+    "os": "^0.1.1",
+    "path": "^0.12.7",
+    "scrape-it": "^3.2.2",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.14.0",
+    "eslint-config-airbnb-base": "^11.0.1",
+    "eslint-plugin-import": "^2.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lightergrey",
+  "license": "ISC"
+}
