@@ -7,7 +7,7 @@ module.exports = (controller) => {
     bukkits = bukkitsFromStorage ? bukkitsFromStorage.values : [];
   });
 
-  controller.hears([/^bukkit\s?([\w-]+)?(?: from (\w+))?$/i], 'direct_message,direct_mention,mention', (bot, message) => {
+  controller.hears([/^bukkit\s?([\w-]+)?(?: from (\w+))?$/i], 'ambient', (bot, message) => {
     const [, fileName, source] = message.match;
 
     if (!bukkits.length) {

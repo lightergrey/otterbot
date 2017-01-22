@@ -71,7 +71,7 @@ module.exports = (controller) => {
     });
   });
 
-  controller.hears([/^\?(.*)/], 'direct_message,direct_mention,mention', (bot, message) => {
+  controller.hears([/^\?(.*)/], 'ambient', (bot, message) => {
     const id = message.match[1];
 
     if (!id) {
@@ -117,7 +117,7 @@ module.exports = (controller) => {
     });
   });
 
-  controller.hears(['^?list (.*)'], 'direct_message,direct_mention,mention', (bot, message) => {
+  controller.hears(['^list (.*)'], 'direct_message,direct_mention,mention', (bot, message) => {
     const id = message.match[1];
     controller.storage.teams.get(id, (err, data) => {
       if (err) {
