@@ -117,6 +117,18 @@ module.exports = (controller) => {
     });
   });
 
+  controller.hears(['^?list (.*)'], 'direct_message,direct_mention,mention', (bot, message) => {
+    const id = message.match[1];
+    controller.storage.teams.get(id, (err, data) => {
+      if (err) {
+        bot.reply(message, `Something went wrong: ${err}`);
+        return;
+      }
+
+      bot.reply(message, JSON.stringify(data.values));
+    });
+  });
+
   controller.hears(['^dump'], 'direct_message,direct_mention,mention', (bot, message) => {
     controller.storage.teams.all((err, data) => {
       if (err) {
