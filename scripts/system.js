@@ -5,8 +5,8 @@
 
 const os = require('os');
 
-module.exports = (controller) => {
-  const formatUptime = (uptime) => {
+module.exports = controller => {
+  const formatUptime = uptime => {
     let unit = 'second';
     if (uptime > 60) {
       uptime /= 60;
@@ -26,6 +26,11 @@ module.exports = (controller) => {
 
   controller.hears(['shutdown'], 'direct_message,direct_mention,mention', (bot, message) => {
     bot.startConversation(message, (err, convo) => {
+      if (err) {
+        bot.reply(message, `Something went wrong: ${err}`);
+        return;
+      }
+
       convo.ask('Are you sure you want me to shutdown?', [
         {
           pattern: bot.utterances.yes,
@@ -33,23 +38,23 @@ module.exports = (controller) => {
             convo.say('Bye!');
             convo.next();
             setTimeout(() => {
-              process.exit();
+              process.exit(); // eslint-disable-line unicorn/no-process-exit
             }, 3000);
-          },
+          }
         }, {
           pattern: bot.utterances.no,
           default: true,
           callback(response, convo) {
             convo.say('*Phew!*');
             convo.next();
-          },
-        },
+          }
+        }
       ]);
     });
   });
 
   controller.hears([
-    'uptime', 'identify yourself', 'who are you', 'what is your name',
+    'uptime', 'identify yourself', 'who are you', 'what is your name'
   ], 'direct_message,direct_mention,mention', (bot, message) => {
     const hostname = os.hostname();
     const uptime = formatUptime(process.uptime());

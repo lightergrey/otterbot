@@ -8,7 +8,7 @@
   * • *DANGER* `@bot import <stringifiedData>` Import stringifiedData, writing over saved data
  */
 
-module.exports = (controller) => {
+module.exports = controller => {
   controller.hears([/^learn (.*) \| (.*)/i], 'direct_message,direct_mention,mention', (bot, message) => {
     const id = message.match[1];
     const value = message.match[2];
@@ -26,10 +26,10 @@ module.exports = (controller) => {
 
       const newData = {
         id,
-        values: [].concat(...(data ? data.values : []), value),
+        values: [].concat(...(data ? data.values : []), value)
       };
 
-      controller.storage.teams.save(Object.assign({}, data, newData), (saveErr) => {
+      controller.storage.teams.save(Object.assign({}, data, newData), saveErr => {
         if (saveErr) {
           bot.reply(message, `Something went wrong: ${err}`);
           return;
@@ -48,7 +48,7 @@ module.exports = (controller) => {
       return;
     }
 
-    controller.storage.teams.remove(id, (err) => {
+    controller.storage.teams.remove(id, err => {
       if (err) {
         bot.reply(message, `Something went wrong: ${err}`);
         return;
@@ -118,8 +118,8 @@ module.exports = (controller) => {
         content: `${JSON.stringify(data, null, 2)}`,
         filename: `${id}.json`,
         filetype: 'json',
-        channels: message.channel,
-      }, (err) => {
+        channels: message.channel
+      }, err => {
         if (err) {
           bot.reply(message, `Sorry, there has been an error: ${err}`);
         }
@@ -138,8 +138,8 @@ module.exports = (controller) => {
         content: `${JSON.stringify(data.map(item => item.id), null, 2)}`,
         filename: 'ids.json',
         filetype: 'json',
-        channels: message.channel,
-      }, (err) => {
+        channels: message.channel
+      }, err => {
         if (err) {
           bot.reply(message, `Sorry, there has been an error: ${err}`);
         }
@@ -157,8 +157,8 @@ module.exports = (controller) => {
 
     const data = JSON.parse(string);
 
-    data.forEach((item) => {
-      controller.storage.teams.save(item, (err) => {
+    data.forEach(item => {
+      controller.storage.teams.save(item, err => {
         if (err) {
           bot.reply(message, `Something went wrong: ${err}`);
         }

@@ -8,22 +8,35 @@
 const scrapeIt = require('scrape-it');
 const fuzzy = require('fuzzy');
 
-module.exports = (controller) => {
+module.exports = controller => {
   let bukkits = [];
 
+  const makeBukkitsFromUrlAndFileNames = (url, fileNames) => {
+    return fileNames
+      .filter(fileName => (/\.(gif|jpg|jpeg|png)$/i).test(fileName))
+      .map(fileName => ({
+        source: url,
+        fileName
+      }));
+  };
+
   controller.storage.teams.get('bukkits', (err, bukkitsFromStorage) => {
+    if (err) {
+      return;
+    }
+
     bukkits = bukkitsFromStorage ? bukkitsFromStorage.values : [];
   });
 
   controller.hears([/^bukkit\s?([\w-]+)?(?: from (\w+))?$/i], 'direct_message,direct_mention,mention,ambient', (bot, message) => {
     const [, fileName, source] = message.match;
 
-    if (!bukkits.length) {
+    if (bukkits.length === 0) {
       bot.reply(message, 'No bukkits. Try `reload bukkits`');
       return;
     }
 
-    const matches = fuzzy.filter(source, bukkits, { extract: el => el.source })
+    const matches = fuzzy.filter(source, bukkits, {extract: el => el.source})
       .map(el => (el.original ? el.original : el))
       .filter(item => (fileName ? new RegExp(fileName, 'i').test(item.fileName) : true));
 
@@ -39,6 +52,11 @@ module.exports = (controller) => {
 
   controller.hears(['^reload bukkits'], 'direct_message,direct_mention,mention', (bot, message) => {
     controller.storage.teams.get('bukkitSource', (err, bukkitSource) => {
+      if (err) {
+        bot.reply(message, `Something went wrong: ${err}`);
+        return;
+      }
+
       if (!bukkitSource) {
         bot.reply(message, 'No bukkitSource. Try `learn bukkitSource | <url>`');
         return;
@@ -46,27 +64,22 @@ module.exports = (controller) => {
 
       const requests = bukkitSource.values
         .map(item => item.replace(/^<|>$/g, ''))
-        .map((url) => {
+        .map(url => {
           const config = {
             values: {
               listItem: 'a',
-              attr: 'href',
-            },
+              attr: 'href'
+            }
           };
 
           return scrapeIt(url, config)
-            .then(filenames => filenames.values
-              .filter(fileName => (/\.(gif|jpg|jpeg|png)$/i).test(fileName))
-              .map(fileName => ({
-                source: url,
-                fileName,
-              })));
+            .then(fileNames => makeBukkitsFromUrlAndFileNames(url, fileNames.values));
         });
 
-      Promise.all(requests).then((responses) => {
+      Promise.all(requests).then(responses => {
         bukkits = [].concat(...responses);
 
-        controller.storage.teams.save({ id: 'bukkits', values: bukkits }, (requestErr) => {
+        controller.storage.teams.save({id: 'bukkits', values: bukkits}, requestErr => {
           if (requestErr) {
             bot.reply(message, `Something went wrong: ${requestErr}`);
             return;
