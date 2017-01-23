@@ -76,6 +76,7 @@ const botkit = require('botkit');
 const path = require('path');
 const redis = require('botkit-storage-redis');
 const url = require('url');
+const http = require('http');
 
 const normalizedPath = path.join(__dirname, 'scripts');
 
@@ -100,3 +101,9 @@ controller.spawn({
 require('fs').readdirSync(normalizedPath).forEach((file) => {
   require(`./scripts/${file}`)(controller);
 });
+
+// To keep Heroku's free dyno awake
+http.createServer((request, response) => {
+  response.writeHead(200, { 'Content-Type': 'text/plain' });
+  response.end('Ok, dyno is awake.');
+}).listen(process.env.PORT || 5000);
