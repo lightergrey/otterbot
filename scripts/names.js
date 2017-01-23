@@ -1,3 +1,8 @@
+/**
+  * • `@bot call me <name>` Teach @bot what to call you
+  * • `@bot what is my name` Check value for user name
+ */
+
 module.exports = (controller) => {
   controller.hears([
     'call me (.*)',

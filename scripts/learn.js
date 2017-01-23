@@ -1,3 +1,13 @@
+/**
+  * • `@bot learn <id> | <value>` Teach @bot to respond to id with a value
+  * • `@bot forget <id>` Remove learned id
+  * • `@bot list <id>` Show all possible values for id
+  * • `?<id>` Get a random value for id
+  * • `@bot dump <id>` Dump data in file for id
+  * • `@bot dump` Dump all ids in file
+  * • *DANGER* `@bot import <stringifiedData>` Import stringifiedData, writing over saved data
+ */
+
 module.exports = (controller) => {
   controller.hears([/^learn (.*) \| (.*)/i], 'direct_message,direct_mention,mention', (bot, message) => {
     const id = message.match[1];
@@ -71,7 +81,7 @@ module.exports = (controller) => {
     });
   });
 
-  controller.hears([/^\?(.*)/], 'ambient', (bot, message) => {
+  controller.hears([/^\?(.*)/], 'direct_message,direct_mention,mention,ambient', (bot, message) => {
     const id = message.match[1];
 
     if (!id) {
@@ -114,18 +124,6 @@ module.exports = (controller) => {
           bot.reply(message, `Sorry, there has been an error: ${err}`);
         }
       });
-    });
-  });
-
-  controller.hears(['^list (.*)'], 'direct_message,direct_mention,mention', (bot, message) => {
-    const id = message.match[1];
-    controller.storage.teams.get(id, (err, data) => {
-      if (err) {
-        bot.reply(message, `Something went wrong: ${err}`);
-        return;
-      }
-
-      bot.reply(message, JSON.stringify(data.values));
     });
   });
 

@@ -1,3 +1,8 @@
+/**
+  * • `@bot shutdown` Shutdown
+  * • `@bot uptime` Get details on @bot
+ */
+
 const os = require('os');
 
 module.exports = (controller) => {

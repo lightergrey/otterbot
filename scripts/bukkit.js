@@ -1,3 +1,10 @@
+/**
+ * • `bukkit` Returns a random bukkit from any of the bukkitSources
+ * • `bukkit <query>` Returns a random bukkit that matches the query from any of the bukkitSources
+ * • `bukkit <query> from <source>` Returns a random bukkit that matches the query from a bukkitSource that matches the source
+ * • `@bot reload bukkits` Gets all the bukkits from the bukkitSources
+ */
+
 const scrapeIt = require('scrape-it');
 
 module.exports = (controller) => {
@@ -7,7 +14,7 @@ module.exports = (controller) => {
     bukkits = bukkitsFromStorage ? bukkitsFromStorage.values : [];
   });
 
-  controller.hears([/^bukkit\s?([\w-]+)?(?: from (\w+))?$/i], 'ambient', (bot, message) => {
+  controller.hears([/^bukkit\s?([\w-]+)?(?: from (\w+))?$/i], 'direct_message,direct_mention,mention,ambient', (bot, message) => {
     const [, fileName, source] = message.match;
 
     if (!bukkits.length) {

@@ -1,3 +1,7 @@
+/**
+  * • `@bot hello` Hello
+ */
+
 module.exports = (controller) => {
   controller.hears([
     'hello',
