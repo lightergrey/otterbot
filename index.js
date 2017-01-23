@@ -65,7 +65,9 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-if (!process.env.token) {
+require('dotenv').config();
+
+if (!process.env.SLACK_TOKEN) {
   console.log('Error: Specify token in environment'); // eslint-disable-line no-console
   process.exit(1);
 }
@@ -79,9 +81,10 @@ const normalizedPath = path.join(__dirname, 'scripts');
 
 const redisURL = url.parse(process.env.REDISCLOUD_URL);
 const redisStorage = redis({
-  namespace: 'botkit',
+  namespace: 'botkit-otterbot',
   host: redisURL.hostname,
   port: redisURL.port,
+  auth_pass: redisURL.auth.split(':')[1],
 });
 
 const controller = botkit.slackbot({
@@ -91,7 +94,7 @@ const controller = botkit.slackbot({
 });
 
 controller.spawn({
-  token: process.env.token,
+  token: process.env.SLACK_TOKEN,
 }).startRTM();
 
 require('fs').readdirSync(normalizedPath).forEach((file) => {
