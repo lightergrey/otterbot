@@ -1,11 +1,12 @@
 /**
  * • `bukkit` Returns a random bukkit from any of the bukkitSources
  * • `bukkit <query>` Returns a random bukkit that matches the query from any of the bukkitSources
- * • `bukkit <query> from <source>` Returns a random bukkit that matches the query from a bukkitSource that matches the source
+ * • `bukkit <query> from <source>` Returns a random bukkit that matches the query from source
  * • `@bot reload bukkits` Gets all the bukkits from the bukkitSources
  */
 
 const scrapeIt = require('scrape-it');
+const fuzzy = require('fuzzy');
 
 module.exports = (controller) => {
   let bukkits = [];
@@ -22,9 +23,9 @@ module.exports = (controller) => {
       return;
     }
 
-    const matches = bukkits
-      .filter(item => (fileName ? new RegExp(fileName, 'i').test(item.fileName) : true))
-      .filter(item => (source ? new RegExp(source, 'i').test(item.source) : true));
+    const matches = fuzzy.filter(source, bukkits, { extract: el => el.source })
+      .map(el => (el.original ? el.original : el))
+      .filter(item => (fileName ? new RegExp(fileName, 'i').test(item.fileName) : true));
 
     const match = matches[Math.floor(Math.random() * matches.length)];
 
