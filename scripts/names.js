@@ -3,16 +3,21 @@
   * • `@bot what is my name` Check value for user name
  */
 
-module.exports = (controller) => {
+module.exports = controller => {
   controller.hears([
     'call me (.*)',
-    'my name is (.*)',
+    'my name is (.*)'
   ], 'direct_message,direct_mention,mention', (bot, message) => {
     const name = message.match[1];
     controller.storage.users.get(message.user, (err, user) => {
+      if (err) {
+        bot.reply(message, `Something went wrong: ${err}`);
+        return;
+      }
+
       const newData = {
         id: message.user,
-        name,
+        name
       };
 
       controller.storage.users.save(Object.assign({}, user, newData), () => {
@@ -23,9 +28,14 @@ module.exports = (controller) => {
 
   controller.hears([
     'what is my name',
-    'who am i',
+    'who am i'
   ], 'direct_message,direct_mention,mention', (bot, message) => {
     controller.storage.users.get(message.user, (err, user) => {
+      if (err) {
+        bot.reply(message, `Something went wrong: ${err}`);
+        return;
+      }
+
       if (user && user.name) {
         bot.reply(message, `Your name is ${user.name}`);
         return;
@@ -42,33 +52,38 @@ module.exports = (controller) => {
                   // since no further messages are queued after this,
                   // the conversation will end naturally with status == 'completed'
                   convo.next();
-                },
+                }
               }, {
                 pattern: 'no',
                 callback(response, convo) {
                   // stop the conversation. this will cause it to end with status == 'stopped'
                   convo.stop();
-                },
+                }
               }, {
                 default: true,
                 callback(response, convo) {
                   convo.repeat();
                   convo.next();
-                },
-              },
+                }
+              }
             ]);
 
             convo.next();
-          }, { key: 'nickname' }); // store the results in a field called nickname
+          }, {key: 'nickname'}); // store the results in a field called nickname
 
-          convo.on('end', (convo) => {
+          convo.on('end', convo => {
             if (convo.status === 'completed') {
               bot.reply(message, 'OK! I will update my dossier...');
 
               controller.storage.users.get(message.user, (err, user) => {
+                if (err) {
+                  bot.reply(message, `Something went wrong: ${err}`);
+                  return;
+                }
+
                 const newData = {
                   id: message.user,
-                  name: convo.extractResponse('nickname'),
+                  name: convo.extractResponse('nickname')
                 };
 
                 controller.storage.users.save(Object.assign({}, user, newData), () => {
