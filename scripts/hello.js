@@ -1,5 +1,6 @@
 /**
   * • `@bot hello` Introduce yourself
+  * • `@bot delete me` Delete your record
  */
 
 module.exports = controller => {
