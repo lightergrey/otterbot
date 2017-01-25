@@ -4,8 +4,8 @@
 
 module.exports = controller => {
   controller.hears([
-    'hello',
-    'hi'
+    '^hello',
+    '^hi'
   ], 'direct_message,direct_mention,mention', (bot, message) => {
     bot.api.reactions.add({
       timestamp: message.ts,
