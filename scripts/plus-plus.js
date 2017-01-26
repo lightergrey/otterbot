@@ -4,39 +4,68 @@
  */
 
 module.exports = controller => {
+  const setPlusesForUser = (user, operation) => {
+    const pluses = user.pluses || 0;
+
+    const newData = {
+      pluses: pluses + ((operation === '++') ? 1 : -1)
+    };
+
+    return Object.assign({}, user, newData);
+  };
+
   controller.hears([/^(\S+)(\+\+|--)/i], 'direct_message,direct_mention,mention,ambient', (bot, message) => {
     const [, name, operation] = message.match;
 
-    bot.api.users.list({presence: 0}, (error, response) => {
-      const user = response.members.filter(member => member.name === name)[0];
-
-      if (!user) {
-        bot.reply(message, `Couldn’t find user ${name}`);
+    controller.storage.users.all((err, data) => {
+      if (err) {
+        bot.reply(message, `Something went wrong: ${err}`);
         return;
       }
 
-      controller.storage.users.get(user.id, (err, data) => {
-        if (err) {
-          bot.reply(message, `Something went wrong: ${err}`);
-          return;
-        }
+      const user = data.filter(user => user.name === name)[0];
 
-        const pluses = data && data.pluses ? data.pluses : 0;
+      if (!user) {
+        bot.api.users.list({presence: 0}, (error, response) => {
+          if (err) {
+            bot.reply(message, `Something went wrong: ${err}`);
+            return;
+          }
 
-        const newData = {
-          id: user.id,
-          pluses: pluses + ((operation === '++') ? 1 : -1)
-        };
+          const user = response.members.filter(user => user.name === name)[0];
 
-        controller.storage.users.save(Object.assign({}, data, newData), saveErr => {
+          if (!user) {
+            bot.reply(message, 'Could not find user.');
+            return;
+          }
+
+          if (user) {
+            const plusedUser = setPlusesForUser(user, operation);
+
+            controller.storage.users.save(plusedUser, saveErr => {
+              if (saveErr) {
+                bot.reply(message, `Something went wrong: ${err}`);
+                return;
+              }
+
+              bot.reply(message, `${plusedUser.name} has ${plusedUser.pluses}`);
+            });
+          }
+        });
+      }
+
+      if (user) {
+        const plusedUser = setPlusesForUser(user, operation);
+
+        controller.storage.users.save(plusedUser, saveErr => {
           if (saveErr) {
             bot.reply(message, `Something went wrong: ${err}`);
             return;
           }
 
-          bot.reply(message, `${user.name} has ${newData.pluses}`);
+          bot.reply(message, `${plusedUser.name} has ${plusedUser.pluses}`);
         });
-      });
+      }
     });
   });
 };
