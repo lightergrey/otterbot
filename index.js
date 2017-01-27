@@ -11,7 +11,7 @@ const http = require('http');
 const redis = require('botkit-storage-redis');
 const botkit = require('botkit');
 
-const normalizedPath = path.join(__dirname, 'scripts');
+const normalizedPath = path.join(__dirname, 'skills');
 
 const redisURL = url.parse(process.env.REDISCLOUD_URL);
 const redisStorage = redis({
@@ -32,7 +32,7 @@ controller.spawn({
 }).startRTM();
 
 require('fs').readdirSync(normalizedPath).forEach(file => {
-  require(`./scripts/${file}`)(controller); // eslint-disable-line import/no-dynamic-require
+  require(`./skills/${file}`)(controller); // eslint-disable-line import/no-dynamic-require
 });
 
 // To keep Heroku's free dyno awake
