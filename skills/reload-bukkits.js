@@ -6,18 +6,18 @@ const getBukkits = require('../utils/get-bukkits');
 
 module.exports = controller => {
   controller.hears(['^reload bukkits'], 'direct_message,direct_mention,mention', (bot, message) => {
-    controller.storage.teams.get('bukkitSource', (err, data) => {
+    controller.storage.teams.get('bukkitSources', (err, data) => {
       if (err) {
         bot.reply(message, `Something went wrong: ${err}`);
         return;
       }
 
       if (!data) {
-        bot.reply(message, 'No bukkitSource. Try `learn bukkitSource | <url>`');
+        bot.reply(message, 'No bukkitSources. Try `learn bukkitSources | <url>`');
         return;
       }
 
-      getBukkits(data).then(data => {
+      getBukkits(data.values).then(data => {
         controller.storage.teams.save({id: 'bukkits', values: data}, requestErr => {
           if (requestErr) {
             bot.reply(message, `Something went wrong: ${requestErr}`);

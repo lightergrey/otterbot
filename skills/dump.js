@@ -11,8 +11,8 @@ module.exports = controller => {
       }
 
       bot.api.files.upload({
-        content: `${JSON.stringify(data.map(item => item.id), null, 2)}`,
-        filename: 'ids.json',
+        content: `${JSON.stringify(data, null, 2)}`,
+        filename: `team-data-dump-${Date.now()}.json`,
         filetype: 'json',
         channels: message.channel
       }, err => {
