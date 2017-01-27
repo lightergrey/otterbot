@@ -30,19 +30,25 @@ module.exports = controller => {
           return;
         }
 
-        const newData = {
-          id,
-          values: data.values.filter(storedValue => storedValue !== value)
-        };
+        if (!data) {
+          bot.reply(message, `I can't seem to find "${value}" in ${id}`);
+        }
 
-        controller.storage.teams.save(Object.assign({}, data, newData), saveErr => {
-          if (saveErr) {
-            bot.reply(message, `Something went wrong: ${err}`);
-            return;
-          }
+        if (data) {
+          const newData = {
+            id,
+            values: data.values.filter(storedValue => storedValue !== value)
+          };
 
-          bot.reply(message, `I forgot "${id}": "${value}"`);
-        });
+          controller.storage.teams.save(Object.assign({}, data, newData), saveErr => {
+            if (saveErr) {
+              bot.reply(message, `Something went wrong: ${err}`);
+              return;
+            }
+
+            bot.reply(message, `I forgot "${id}": "${value}"`);
+          });
+        }
       });
     }
   });
