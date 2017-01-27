@@ -23,6 +23,11 @@ module.exports = controller => {
               title: 'pluses',
               value: user.pluses || 0,
               short: false
+            },
+            {
+              title: 'feels',
+              value: user.feels || '',
+              short: false
             }
           ],
           thumb_url: user.profile.image_512
