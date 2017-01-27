@@ -10,10 +10,10 @@ module.exports = controller => {
         return;
       }
 
-      convo.ask('Are you sure? Say "delete" to delete or no to cancel', [
+      convo.ask('Are you sure? Say `delete` to delete.', [
         {
-          pattern: '^delete$',
-          callback: (response, convo) => {
+          pattern: 'delete',
+          callback(response, convo) {
             controller.storage.users.remove(message.user, err => {
               if (err) {
                 bot.reply(message, `Something went wrong: ${err}`);
@@ -24,11 +24,12 @@ module.exports = controller => {
               convo.next();
             });
           }
-        },
-        {
+        }, {
+          pattern: bot.utterances.no,
           default: true,
-          callback: (response, convo) => {
-            convo.stop();
+          callback(response, convo) {
+            convo.say('Phew! Not deleted.');
+            convo.next();
           }
         }
       ]);
