@@ -16,7 +16,7 @@ module.exports = controller => {
         return;
       }
 
-      const bukkits = [].concat(...(data.values || []));
+      const bukkits = [].concat(...(data ? data.values : []));
 
       if (bukkits.length === 0) {
         bot.reply(message, 'No bukkits. Try `reload bukkits`');
