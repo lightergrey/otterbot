@@ -3,7 +3,7 @@
  */
 
 module.exports = controller => {
-  controller.hears(['`oh no`'], 'direct_message,direct_mention,mention,ambient', (bot, message) => {
+  controller.hears(['oh no'], 'direct_message,direct_mention,mention,ambient', (bot, message) => {
     bot.reply(message, '`oh no`');
   });
 };
