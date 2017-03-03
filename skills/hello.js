@@ -10,7 +10,7 @@ module.exports = controller => {
     bot.api.reactions.add({
       timestamp: message.ts,
       channel: message.channel,
-      name: 'robot_face'
+      name: 'otter2'
     }, err => {
       if (err) {
         bot.botkit.log('Failed to add emoji reaction :(', err);
