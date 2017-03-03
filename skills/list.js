@@ -1,5 +1,5 @@
 /**
-  * • `@bot list <id>` Show all possible values for id
+  * • `@bot list <query>` Show all possible values for query
  */
 
 module.exports = controller => {

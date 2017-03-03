@@ -3,76 +3,27 @@
  */
 
 module.exports = controller => {
-  const benedicts = [
-    'BENEDICT',
-    'BAILIWICK',
-    'BORNFREE',
-    'BARSTOOLINGTON',
-    'BORINGTEDTALK',
-    'BRATWURST',
-    'BATMITZVAH',
-    'BATHYSPHERE',
-    'BATTLEMENT',
-    'BENTO BOX',
-    'BENEVOLENT',
-    'BENDYSTRAWS',
-    'BUNDYSTRICT',
-    'BANDERSNATCH',
-    'BEERSANDWICH',
-    'BALACLAVA',
-    'BALTHAZAR',
-    'BALACLAVA',
-    'BARCALOUNGER',
-    'BARNDOOR',
-    'BENELUX',
-    'BEERBELLY',
-    'BEECHNUT',
-    'BEANCOUNTER',
-    'BRANDYWITCH',
-    'BANDICOOT',
-    'BATTLESHIP',
-    'BUTTERSCOTCH',
-    'BLUNDERBUSS',
-    'BUMBLEBEE',
-    'BAGFRITOS',
-    'BENELUX',
-    'BERNIEDICT'
-  ];
-
-  const cumberbatches = [
-    'CARBUNCLE',
-    'COREPOWER',
-    'CARBURETOR',
-    'CAMBRIANAGE',
-    'CUMBERBATCH',
-    'CAMISOLE',
-    'CAMELBACK',
-    'CAMOUFLAGE',
-    'CHLOROFORM',
-    'CLAM-DIGGERS',
-    'CAMEMBERT',
-    'CUMMERBUND',
-    'MONTALBAN',
-    'COMBOBRATS',
-    'CULPABILITY',
-    'CAMBOZOLA',
-    'CHRONOTRIGGER',
-    'CLAMBAKE',
-    'STACKEXCHANGE',
-    'CRUMBLECAKE',
-    'DUMBLEDORE',
-    'CARROTCAKE',
-    'CHAMBERPOT',
-    'COFFEEPOT',
-    'CLINKERFUZZ',
-    'CLOISTERFARM',
-    'CABBAGEPATCH',
-    'CORNCHIPBAG',
-    'CARPARKBADGE',
-    'CAUCUSBATCH'
-  ];
-
   controller.hears(['benedict cumberbatch'], 'direct_message,direct_mention,mention,ambient', (bot, message) => {
-    bot.reply(message, `${benedicts[Math.floor(Math.random() * benedicts.length)]} ${cumberbatches[Math.floor(Math.random() * cumberbatches.length)]}`);
+    controller.storage.teams.get('benedicts', (err, data) => {
+      if (err) {
+        bot.reply(message, `Error getting benedicts: ${err}`);
+        return;
+      }
+
+      const benedicts = data ? data.values : [];
+
+      controller.storage.teams.get('cumberbatches', (err, data) => {
+        if (err) {
+          bot.reply(message, `Error getting cumberbatches: ${err}`);
+          return;
+        }
+
+        const cumberbatches = data ? data.values : [];
+
+        if (benedicts.length > 0 && cumberbatches.length > 0) {
+          bot.reply(message, `${benedicts[Math.floor(Math.random() * benedicts.length)]} ${cumberbatches[Math.floor(Math.random() * cumberbatches.length)]}`);
+        }
+      });
+    });
   });
 };

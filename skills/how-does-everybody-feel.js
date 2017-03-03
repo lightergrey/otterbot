@@ -40,7 +40,7 @@ module.exports = controller => {
       .filter(item => item.name)
       .filter(item => item.feels);
 
-      bot.reply(message, users.reduce((prev, curr) => prev + `• *${curr.name}* ${curr.feels}\n`, ''));
+      bot.reply(message, users.reduce((prev, curr) => prev + `• *${curr.name}* feels ${curr.feels}\n`, ''));
     });
   });
 };

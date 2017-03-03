@@ -1,5 +1,5 @@
 /**
-  * • `@bot uptime` Get details on @bot
+  * • *DANGER* `@bot shutdown` Shut @bot down
  */
 
 module.exports = controller => {

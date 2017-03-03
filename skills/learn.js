@@ -1,5 +1,5 @@
 /**
-  * • `@bot learn <id> | <value>` Teach @bot to respond to id with a value
+  * • `@bot learn <query> | <value>` Teach @bot to respond to query with a value
  */
 const getBukkits = require('../utils/get-bukkits');
 

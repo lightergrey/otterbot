@@ -1,5 +1,5 @@
 /**
-  * • `?<id>` Get a random value for id
+  * • `?<query>` Get a random value for query
  */
 
 module.exports = controller => {
