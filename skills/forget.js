@@ -1,5 +1,6 @@
 /**
   * • `@bot forget <query>` Remove learned query
+  * • `@bot forget <query> | <value>` Remove learned value
  */
 
 module.exports = controller => {
