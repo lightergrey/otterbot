@@ -10,23 +10,23 @@ module.exports = controller => {
           color: `#${user.color}`,
           fields: [
             {
-              title: 'id',
+              title: "id",
               value: user.id,
               short: false
             },
             {
-              title: 'name',
+              title: "name",
               value: user.name,
               short: false
             },
             {
-              title: 'pluses',
+              title: "pluses",
               value: user.pluses || 0,
               short: false
             },
             {
-              title: 'feels',
-              value: user.feels || '',
+              title: "feels",
+              value: user.feels || "",
               short: false
             }
           ],
@@ -36,47 +36,51 @@ module.exports = controller => {
     };
   };
 
-  controller.hears([/^tell me about (\w+)/i], 'direct_message,direct_mention,mention', (bot, message) => {
-    const name = message.match[1];
+  controller.hears(
+    [/^tell me about (\w+)/i],
+    "direct_message,direct_mention,mention",
+    (bot, message) => {
+      const name = message.match[1];
 
-    controller.storage.users.all((err, data) => {
-      if (err) {
-        bot.reply(message, `Something went wrong: ${err}`);
-        return;
-      }
+      controller.storage.users.all((err, data) => {
+        if (err) {
+          bot.reply(message, `Something went wrong: ${err}`);
+          return;
+        }
 
-      const user = data.filter(user => user.name === name)[0];
+        const user = data.filter(user => user.name === name)[0];
 
-      if (!user) {
-        bot.api.users.list({presence: 0}, (error, response) => {
-          if (err) {
-            bot.reply(message, `Something went wrong: ${err}`);
-            return;
-          }
+        if (!user) {
+          bot.api.users.list({ presence: 0 }, (error, response) => {
+            if (err) {
+              bot.reply(message, `Something went wrong: ${err}`);
+              return;
+            }
 
-          const user = response.members.filter(user => user.name === name)[0];
+            const user = response.members.filter(user => user.name === name)[0];
 
-          if (!user) {
-            bot.reply(message, 'Could not find user.');
-            return;
-          }
+            if (!user) {
+              bot.reply(message, "Could not find user.");
+              return;
+            }
 
-          if (user) {
-            controller.storage.users.save(user, saveErr => {
-              if (saveErr) {
-                bot.reply(message, `Something went wrong: ${err}`);
-                return;
-              }
+            if (user) {
+              controller.storage.users.save(user, saveErr => {
+                if (saveErr) {
+                  bot.reply(message, `Something went wrong: ${err}`);
+                  return;
+                }
 
-              bot.reply(message, formatAttachmentForUser(user));
-            });
-          }
-        });
-      }
+                bot.reply(message, formatAttachmentForUser(user));
+              });
+            }
+          });
+        }
 
-      if (user) {
-        bot.reply(message, formatAttachmentForUser(user));
-      }
-    });
-  });
+        if (user) {
+          bot.reply(message, formatAttachmentForUser(user));
+        }
+      });
+    }
+  );
 };
