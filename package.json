@@ -17,11 +17,14 @@
     "url": "^0.11.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "jest --watch"
   },
   "author": "lightergrey",
   "license": "ISC",
   "devDependencies": {
+    "botkit-mock": "^0.1.11",
+    "jest": "^23.6.0",
     "prettier": "^1.15.3"
   }
 }

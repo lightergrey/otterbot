@@ -11,6 +11,8 @@ const http = require("http");
 const redis = require("botkit-storage-redis");
 const botkit = require("botkit");
 
+const bukkitController = require("./src/skill/bukkit/controller");
+
 const normalizedPath = path.join(__dirname, "skills");
 
 const redisURL = url.parse(process.env.REDISCLOUD_URL);
@@ -38,6 +40,8 @@ require("fs")
   .forEach(file => {
     require(`./skills/${file}`)(controller); // eslint-disable-line import/no-dynamic-require
   });
+
+bukkitController(controller);
 
 // To keep Heroku's free dyno awake
 http
