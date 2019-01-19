@@ -13,6 +13,7 @@ const botkit = require("botkit");
 
 const awYissController = require("./src/skills/aw-yiss/controller");
 const bukkitController = require("./src/skills/bukkit/controller");
+const benedictCumberbatchController = require("./src/skills/benedict-cumberbatch/controller");
 
 const normalizedPath = path.join(__dirname, "skills");
 
@@ -44,6 +45,7 @@ require("fs")
 
 awYissController(controller);
 bukkitController(controller);
+benedictCumberbatchController(controller);
 
 // To keep Heroku's free dyno awake
 http
