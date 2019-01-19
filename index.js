@@ -11,8 +11,8 @@ const http = require("http");
 const redis = require("botkit-storage-redis");
 const botkit = require("botkit");
 
-const awYissController = require("./src/skill/aw-yiss/controller");
-const bukkitController = require("./src/skill/bukkit/controller");
+const awYissController = require("./src/skills/aw-yiss/controller");
+const bukkitController = require("./src/skills/bukkit/controller");
 
 const normalizedPath = path.join(__dirname, "skills");
 
