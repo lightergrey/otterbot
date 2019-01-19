@@ -1,3 +1,8 @@
+/**
+ * • `bukkit` Returns a random bukkit from any of the bukkitSources
+ * • `bukkit <query>` Returns a random bukkit that matches the query from any of the bukkitSources
+ * • `bukkit <query> from <source>` Returns a random bukkit that matches the query from source
+ */
 const replyHandler = require("./replyHandler");
 const getReply = require("../../getReply");
 
