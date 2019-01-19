@@ -1,8 +1,5 @@
 const fuzzy = require("fuzzy");
-
-const getRandomItem = bukkitItems => {
-  return bukkitItems[Math.floor(Math.random() * bukkitItems.length)];
-};
+const getRandomItem = require("../../getRandomItem");
 
 const findRandomMatchForQuery = (bukkitItems, query, source) => {
   const matches = fuzzy
